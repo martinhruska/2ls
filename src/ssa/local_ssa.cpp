@@ -472,7 +472,8 @@ void local_SSAt::build_transfer(locationt loc)
       {
         assign_rec(symbolic_deref_lhs, rhs, true_exprt(), loc);
         assign_rec(
-          deref_lhs, name(ssa_objectt(symbolic_deref_lhs, ns), OUT, loc),
+          deref_lhs,
+          name(ssa_objectt(symbolic_deref_lhs, ns), OUT, loc),
           true_exprt(),
           loc);
       }
