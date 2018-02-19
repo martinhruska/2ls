@@ -21,6 +21,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "ssa_object.h"
 #include "ssa_heap_domain.h"
 #include "may_alias_analysis.h"
+#include "loop_dependency_analysis.h"
 
 #define TEMPLATE_PREFIX "__CPROVER_template"
 #define TEMPLATE_DECL TEMPLATE_PREFIX
