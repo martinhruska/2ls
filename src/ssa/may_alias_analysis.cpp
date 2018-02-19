@@ -6,6 +6,7 @@ Author: Viktor Malik, imalik@fit.vutbr.cz
 
 \*******************************************************************/
 
+#include "analysis_tools.h"
 #include "may_alias_analysis.h"
 
 /*******************************************************************\
@@ -29,11 +30,20 @@ void may_alias_domaint::transform(
   {
     const code_assignt &code_assign=to_code_assign(from->code);
 
-    const exprt lhs_deref=dereference(code_assign.lhs(), ns);
-    const exprt rhs_deref=dereference(code_assign.rhs(), ns);
+    const exprt lhs_deref=analysis_tools::dereference(code_assign.lhs(), ns);
+    const exprt rhs_deref=analysis_tools::dereference(code_assign.rhs(), ns);
 
     std::set<irep_idt> aliases;
-    get_rhs_aliases(rhs_deref, aliases);
+      
+    auto process_symbols = [this](std::set<irep_idt> &value_set, const irep_idt& identifier) {
+      for(aliasest::const_iterator it=this->aliases.begin();
+           it!=this->aliases.end();
+           it++)
+           if(this->aliases.same_set(*it, identifier))
+               value_set.insert(*it);
+    };
+    analysis_tools::get_rhs_values(rhs_deref, aliases, process_symbols);
+    // get_rhs_aliases(rhs_deref, aliases);
     assign_lhs_aliases(lhs_deref, aliases);
   }
 }
@@ -114,6 +124,7 @@ Function: may_alias_domaint::get_rhs_aliases
  Purpose:
 
 \*******************************************************************/
+/*
 void may_alias_domaint::get_rhs_aliases(
   const exprt &rhs,
   std::set<irep_idt> &alias_set)
@@ -141,7 +152,7 @@ void may_alias_domaint::get_rhs_aliases(
     get_rhs_aliases(to_typecast_expr(rhs).op(), alias_set);
   }
 }
-
+*/
 /*******************************************************************\
 
 Function: may_alias_domaint::dereference
@@ -153,6 +164,7 @@ Function: may_alias_domaint::dereference
  Purpose:
 
 \*******************************************************************/
+/*
 const exprt may_alias_domaint::dereference(
   const exprt &expr,
   const namespacet &ns)
@@ -161,7 +173,7 @@ const exprt may_alias_domaint::dereference(
   members_to_symbols(deref, ns);
   return deref;
 }
-
+*/
 /*******************************************************************\
 
 Function: may_alias_domaint::members_to_symbols
@@ -173,6 +185,7 @@ Function: may_alias_domaint::members_to_symbols
  Purpose:
 
 \*******************************************************************/
+/*
 void may_alias_domaint::members_to_symbols(exprt &expr, const namespacet &ns)
 {
   ssa_objectt object(expr, ns);
@@ -180,3 +193,5 @@ void may_alias_domaint::members_to_symbols(exprt &expr, const namespacet &ns)
     expr=object.symbol_expr();
   Forall_operands(it, expr)members_to_symbols(*it, ns);
 }
+*/
+
