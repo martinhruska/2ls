@@ -40,7 +40,6 @@ public:
             get_rhs_values(to_typecast_expr(rhs).op(), values_set, process_symbol);
         }
     }
-      // void (*process_symbol)(std::set<irep_idt> &value_set, const irep_idt& identifier)=nullptr);
 
     static const exprt dereference(const exprt &expr, const namespacet &ns);
     static void members_to_symbols(exprt &expr, const namespacet &ns);

@@ -31,11 +31,6 @@ protected:
   void assign_lhs_aliases(
     const exprt &lhs,
     const std::set<irep_idt> &rhs_alias_set);
-  // void get_rhs_aliases(const exprt &rhs, std::set<irep_idt> &alias_set);
-
-  // static const exprt dereference(const exprt &expr, const namespacet &ns);
-  // static void members_to_symbols(exprt &expr, const namespacet &ns);
-  // void process_symbols(std::set<irep_idt> &alias_set, const irep_idt &identifier);
 };
 
 class may_alias_analysist:public ait<may_alias_domaint>

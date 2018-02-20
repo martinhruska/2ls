@@ -62,7 +62,6 @@ void loop_dependency_analysis::transform(
     }
 }
 
-
 bool loop_dependency_analysis::merge(
         const loop_dependency_analysis &other,
         ai_domain_baset::locationt from,
@@ -100,49 +99,6 @@ bool loop_dependency_analysis::merge(
 
   return changed;
 }
-
-/*
-const exprt loop_dependency_analysis::dereference(
-  const exprt &expr,
-  const namespacet &ns)
-{
-  exprt deref=symbolic_dereference(expr, ns);
-  members_to_symbols(deref, ns);
-  return deref;
-}
-
-void loop_dependency_analysis::members_to_symbols(exprt &expr, const namespacet &ns)
-{
-  ssa_objectt object(expr, ns);
-  if(object)
-    expr=object.symbol_expr();
-  Forall_operands(it, expr)members_to_symbols(*it, ns);
-}
-
-void loop_dependency_analysis::get_rhs_aliases(
-  const exprt &rhs,
-  std::set<const irep_idt> &rhs_ids)
-{
-  analysis_tools::get_rhs_values(rhs, rhs_ids, [](){});
-  return;
-  if(rhs.id()==ID_symbol &&
-     id2string(to_symbol_expr(rhs).get_identifier()).find("__CPROVER_")==
-     std::string::npos)
-  {
-    irep_idt identifier=to_symbol_expr(rhs).get_identifier();
-    rhs_ids.insert(identifier);
-  }
-  else if(rhs.id()==ID_if)
-  {
-    get_rhs_aliases(to_if_expr(rhs).true_case(), rhs_ids);
-    get_rhs_aliases(to_if_expr(rhs).false_case(), rhs_ids);
-  }
-  else if(rhs.id()==ID_typecast)
-  {
-    get_rhs_aliases(to_typecast_expr(rhs).op(), rhs_ids);
-  }
-}
-*/
 
 void loop_dependency_ait::initialize(const goto_functionst &goto_functions)
 {

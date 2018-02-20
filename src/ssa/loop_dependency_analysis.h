@@ -7,7 +7,6 @@
 
 #include <analyses/ai.h>
 
-
 class loop_dependency_analysis:public ai_domain_baset
 {
 public:
@@ -29,18 +28,6 @@ private:
   std::unordered_map<size_t, std::set<size_t>> dependency_graph;
   std::unordered_map<size_t, std::set<irep_idt>> cycle_lhs;
   std::unordered_map<size_t, std::set<irep_idt>> cycle_rhs;
-
-/*
-  const exprt dereference(
-    const exprt &expr,
-    const namespacet &ns);
-
-  void members_to_symbols(exprt &expr, const namespacet &ns);
-
-  void get_rhs_aliases(
-    const exprt &rhs,
-    std::set<const irep_idt> &rhs_ids);
-*/
 };
 
 

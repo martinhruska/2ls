@@ -43,7 +43,6 @@ void may_alias_domaint::transform(
                value_set.insert(*it);
     };
     analysis_tools::get_rhs_values(rhs_deref, aliases, process_symbols);
-    // get_rhs_aliases(rhs_deref, aliases);
     assign_lhs_aliases(lhs_deref, aliases);
   }
 }
@@ -112,86 +111,3 @@ void may_alias_domaint::assign_lhs_aliases(
     }
   }
 }
-
-/*******************************************************************\
-
-Function: may_alias_domaint::get_rhs_aliases
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-/*
-void may_alias_domaint::get_rhs_aliases(
-  const exprt &rhs,
-  std::set<irep_idt> &alias_set)
-{
-  if(rhs.id()==ID_symbol &&
-     id2string(to_symbol_expr(rhs).get_identifier()).find("__CPROVER_")==
-     std::string::npos)
-  {
-    irep_idt identifier=to_symbol_expr(rhs).get_identifier();
-    alias_set.insert(identifier);
-
-    for(aliasest::const_iterator it=aliases.begin();
-        it!=aliases.end();
-        it++)
-      if(aliases.same_set(*it, identifier))
-        alias_set.insert(*it);
-  }
-  else if(rhs.id()==ID_if)
-  {
-    get_rhs_aliases(to_if_expr(rhs).true_case(), alias_set);
-    get_rhs_aliases(to_if_expr(rhs).false_case(), alias_set);
-  }
-  else if(rhs.id()==ID_typecast)
-  {
-    get_rhs_aliases(to_typecast_expr(rhs).op(), alias_set);
-  }
-}
-*/
-/*******************************************************************\
-
-Function: may_alias_domaint::dereference
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-/*
-const exprt may_alias_domaint::dereference(
-  const exprt &expr,
-  const namespacet &ns)
-{
-  exprt deref=symbolic_dereference(expr, ns);
-  members_to_symbols(deref, ns);
-  return deref;
-}
-*/
-/*******************************************************************\
-
-Function: may_alias_domaint::members_to_symbols
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-/*
-void may_alias_domaint::members_to_symbols(exprt &expr, const namespacet &ns)
-{
-  ssa_objectt object(expr, ns);
-  if(object)
-    expr=object.symbol_expr();
-  Forall_operands(it, expr)members_to_symbols(*it, ns);
-}
-*/
-
