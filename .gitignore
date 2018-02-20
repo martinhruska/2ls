@@ -19,3 +19,12 @@ tests.log
 
 # binaries
 src/2ls/2ls
+
+# cmake
+CMakeFiles/
+CMakeScripts/
+cmake-build-debug/
+
+# xcode
+2lsx/
+.idea/
