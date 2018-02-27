@@ -2,7 +2,6 @@
 // Created by Martin Hruska on 26/01/2018.
 //
 
-#include <iostream>
 #include "loop_dependency_analysis.h"
 #include "analysis_tools.h"
 #include "ssa_pointed_objects.h"
@@ -10,6 +9,24 @@
 
 
 #define IN(x,a,b) (a <= x && x<=b)
+
+namespace
+{
+    void print_cycle(
+      std::ostream &out,
+      const std::unordered_map<size_t, std::set<irep_idt>>& cycle)
+    {
+      for(const std::pair<size_t, std::set<irep_idt>>& lhsp:cycle)
+      {
+        out << lhsp.first << " -> {";
+        for(const irep_idt& ls:lhsp.second)
+        {
+            out << ls.c_str() << ", ";
+        }
+        out << "}\n";
+      }
+    }
+}
 
 void loop_dependency_analysis::output(
     std::ostream &out,
@@ -21,7 +38,7 @@ void loop_dependency_analysis::output(
     for(const std::pair<size_t, std::set<size_t>> &pair:dependency_graph)
     {
       out << pair.first << " [line "
-        << static_cast<const loop_dependency_ait &>(ai).loops_locations.at(0).first
+        << static_cast<const loop_dependency_ait &>(ai).loops_locations.at(pair.first).first
         << "] depends on ";
       for(const size_t& x:pair.second)
       {
@@ -29,6 +46,10 @@ void loop_dependency_analysis::output(
       }
       out << "\n";
     }
+    out << "LHS ";
+    print_cycle(out, cycle_lhs);
+    out << "RHS ";
+    print_cycle(out, cycle_rhs);
   }
 
 void loop_dependency_analysis::transform(
@@ -55,7 +76,6 @@ void loop_dependency_analysis::transform(
           {
             cycle_lhs[i].insert(to_symbol_expr(lhs_deref).get_identifier());
           }
-          // get_rhs_aliases(rhs_deref, cycle_rhs[i]);
           analysis_tools::get_rhs_values(rhs_deref, cycle_rhs[i], [](std::set<irep_idt> &, const irep_idt&){});
         }
         ++i;
@@ -70,11 +90,15 @@ bool loop_dependency_analysis::merge(
    bool changed=false;
    for(const auto &pair_lhs:other.cycle_lhs)
    {
+     size_t size_before=cycle_lhs[pair_lhs.first].size();
      cycle_lhs[pair_lhs.first].insert(pair_lhs.second.begin(), pair_lhs.second.end());
+     changed|=(cycle_lhs[pair_lhs.first].size()-size_before);
    }
    for(const auto &pair_rhs:other.cycle_rhs)
    {
+     size_t size_before=cycle_rhs[pair_rhs.first].size();
      cycle_rhs[pair_rhs.first].insert(pair_rhs.second.begin(), pair_rhs.second.end());
+     changed|=(cycle_rhs[pair_rhs.first].size()-size_before);
    }
    for(const auto &pair_graph:other.dependency_graph)
    {
@@ -87,10 +111,15 @@ bool loop_dependency_analysis::merge(
      {
        for(const auto &item_lhs:pair_lhs.second)
        {
+         if (pair_lhs.first != pair_rhs.first &&
+             std::string(item_lhs.c_str()).find("malloc") != std::string::npos)
+         {
+             continue;
+         }
          if (pair_rhs.second.count(item_lhs) && (!dependency_graph.count(pair_rhs.first)
                                                 || !dependency_graph.at(pair_rhs.first).count(pair_lhs.first)))
          {
-           changed=true;
+           changed|=true;
            dependency_graph[pair_rhs.first].insert(pair_lhs.first);
          }
        }
